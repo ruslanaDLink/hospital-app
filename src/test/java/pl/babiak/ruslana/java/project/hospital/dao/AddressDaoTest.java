@@ -13,6 +13,30 @@ class AddressDaoTest {
         //when
         addressDao.list();
         //then
+    }
 
+
+    @Test
+    void create() {
+        AddressDao addressDao = new AddressDao();
+        addressDao.create();
+    }
+
+    @Test
+    void read() {
+        AddressDao addressDao = new AddressDao();
+        addressDao.read();
+    }
+
+    @Test
+    void update() {
+        AddressDao addressDao = new AddressDao();
+        addressDao.update();
+    }
+
+    @Test
+    void delete() {
+        AddressDao addressDao = new AddressDao();
+        addressDao.delete();
     }
 }
