@@ -1,0 +1,19 @@
+package pl.babiak.ruslana.java.project.hospital.model;
+
+public enum DoctorType {
+    FAMILY_MEDICINE_PHYSICIAN,
+    PEDIATRICIAN,
+    CARDIOLOGIST,
+    GYNECOLOGIST,
+    ONCOLOGIST,
+    DERMATOLOGIST,
+    IMMUNOLOGIST,
+    SURGEON,
+    PSYCHIATRIST,
+    UROLOGIST,
+    NEUROLOGIST,
+    ANESTHESIOLOGIST,
+    RADIOLOGIST,
+    ENDOCRINOLOGIST,
+    PATHOLOGIST
+}
