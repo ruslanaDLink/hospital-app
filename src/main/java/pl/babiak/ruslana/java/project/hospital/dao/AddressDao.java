@@ -17,7 +17,6 @@ public class AddressDao {
 //CREATE TABLE ADDRESSES(ID INT PRIMARY KEY, NAME VARCHAR(255));
         try {
             Connection connection = DriverManager.getConnection(
-                    //"jdbc:mysql://localhost:3306/persons_info", "root", "ruslanasproperty3006+++");
                     "jdbc:h2:~/test", "sa", "");
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM ADDRESSES;");
