@@ -11,11 +11,18 @@ public class PatientDaoTest {
         patientDao.createTable();
     }
 
+    // TODO: 06/11/2023
+    // dodac sekscje gwt do wszystkich testow
     @Test
     void insertValues() {
+        //given
         PatientDao patientDao = new PatientDao();
         Patient patient = new Patient();
+
+        //when
         Patient insertedPatient = patientDao.insertValues(patient);
+
+        //then
         Assertions.assertNotNull(insertedPatient, "Patient not inserted");
     }
 

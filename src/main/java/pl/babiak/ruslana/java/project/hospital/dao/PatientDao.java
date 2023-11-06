@@ -33,6 +33,10 @@ public class PatientDao {
         }
     }
 
+    // TODO: 06/11/2023
+    // stworzyc oddzilna klase z metoda ktora bedzie generowala unikalne numery klientow + test jednostkowy
+    //             preparedStatement.setInt(1, patient.getClientNumber());
+    // zastapic powyzszy kod generatorem unikalnych numerow klientow
     public Patient insertValues (Patient patient) {
         String valuesInsertion = "INSERT INTO PATIENT (CLIENT_NUMBER, NAME, AGE, PASSPORT_NUMBER, HAS_INSURANCE) " +
                 "VALUES (?,?,?,?,?)";
@@ -46,6 +50,8 @@ public class PatientDao {
             preparedStatement.setBoolean(5, patient.isHasInsurance());
 
             preparedStatement.executeUpdate();
+            // TODO: 06/11/2023
+            // pobrac wygenerowane przez baza danych klucz glowny
 
             System.out.println("Insertion went successfully.");
         } catch (SQLException e) {
