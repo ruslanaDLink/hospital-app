@@ -1,5 +1,7 @@
 package pl.babiak.ruslana.java.project.hospital.dao;
 
+import pl.babiak.ruslana.java.project.hospital.model.Patient;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -31,30 +33,25 @@ public class PatientDao {
         }
     }
 
-    public void insertValues() {
-        String valuesInsertion = "INSERT INTO PATIENT (CLIENT_NUMBER, NAME, AGE, PASSPORT_NUMBER, HAS_INSURANCE) VALUES (?,?,?,?,?)";
+    public Patient insertValues (Patient patient) {
+        String valuesInsertion = "INSERT INTO PATIENT (CLIENT_NUMBER, NAME, AGE, PASSPORT_NUMBER, HAS_INSURANCE) " +
+                "VALUES (?,?,?,?,?)";
         try {
             Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             PreparedStatement preparedStatement = connection.prepareStatement(valuesInsertion);
-            PreparedStatement preparedStatement2 = connection.prepareStatement(valuesInsertion);
-            preparedStatement.setInt(1, 1);
-            preparedStatement.setString(2, "Daria Nowak");
-            preparedStatement.setInt(3, 24);
-            preparedStatement.setString(4, "FA6742");
-            preparedStatement.setBoolean(5, false);
+            preparedStatement.setInt(1, patient.getClientNumber());
+            preparedStatement.setString(2, patient.getName());
+            preparedStatement.setInt(3, patient.getAge());
+            preparedStatement.setString(4, patient.getPassportNumber());
+            preparedStatement.setBoolean(5, patient.isHasInsurance());
 
-            preparedStatement2.setInt(1, 2);
-            preparedStatement2.setString(2, "Jan Kowalski");
-            preparedStatement2.setInt(3, 41);
-            preparedStatement2.setString(4, "FA4056");
-            preparedStatement2.setBoolean(5, true);
-
-            preparedStatement2.executeUpdate();
+            preparedStatement.executeUpdate();
 
             System.out.println("Insertion went successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     //read

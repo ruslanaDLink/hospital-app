@@ -1,6 +1,8 @@
 package pl.babiak.ruslana.java.project.hospital.dao;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pl.babiak.ruslana.java.project.hospital.model.Patient;
 
 public class PatientDaoTest {
     @Test
@@ -12,7 +14,9 @@ public class PatientDaoTest {
     @Test
     void insertValues() {
         PatientDao patientDao = new PatientDao();
-        patientDao.insertValues();
+        Patient patient = new Patient();
+        Patient insertedPatient = patientDao.insertValues(patient);
+        Assertions.assertNotNull(insertedPatient, "Patient not inserted");
     }
 
     @Test
