@@ -40,7 +40,10 @@ class AddressDaoTest {
         Address createdAddress = addressDao.create(address);
 
         //then
-        Assertions.assertNotNull(createdAddress, "Address not inserted.");
+        Assertions.assertAll(
+                () -> Assertions.assertNotNull(createdAddress, "Address not inserted."),
+                () -> Assertions.assertNotNull(createdAddress.getId(), "Id is null.")
+        );
     }
 
     @Test
