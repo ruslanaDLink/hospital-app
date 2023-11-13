@@ -2,12 +2,15 @@ package pl.babiak.ruslana.java.project.hospital.model;
 
 
 public class Patient {
+    private int clientNumber;
     private String name;
     private int age;
     private String passportNumber;
     private Address address;
     private boolean hasInsurance;
 
+    public Patient() {
+    }
 
     public Patient(String name, int age, String passportNumber, Address address, boolean hasInsurance) {
         this.name = name;
@@ -17,12 +20,17 @@ public class Patient {
         this.hasInsurance = hasInsurance;
     }
 
-    public Patient() {
-    }
-
     public void cancelAppointment(Clinic clinic, Appointment appointment) {
         clinic.removeAppointmentFromList(appointment);
         System.out.println(getName() + " canceled appointment ");
+    }
+
+    public int getClientNumber() {
+        return clientNumber;
+    }
+
+    public void setClientNumber(int clientNumber) {
+        this.clientNumber = clientNumber;
     }
 
     public String getName() {
