@@ -9,29 +9,33 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class ClinicDao {
+    private static final Logger LOGGER = Logger.getLogger(ClinicDao.class.getName());
     private final String URL = "jdbc:h2:~/ruslana-sql";
     private final String USERNAME = "sql";
     private final String PASSWORD = "";
 
     //create
     public Clinic create(Clinic clinic) {
-        String statement = "INSERT INTO CLINICS(ID, NAME," +
-                "ADDRESS_ID VALUES(?,?,?)";
+        LOGGER.info("create(" + clinic + ")");
+        String statement = "INSERT INTO CLINICS(ID, NAME, ADDRESS_ID)" +
+                " VALUES(?,?,?)";
         UniqueId uniqueId = new UniqueId();
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.setInt(1, uniqueId.getUniqueId());
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+            int id = uniqueId.getUniqueId();
+            preparedStatement.setInt(1, id);
+            // preparedStatement.setInt(1, 1);
             preparedStatement.setString(2, clinic.getName());
-            preparedStatement.setObject(3, clinic.getAddress());
+            preparedStatement.setInt(3, -1);
             preparedStatement.executeUpdate();
-            preparedStatement.close();
-            connection.close();
+            clinic.setId((long) id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("create(...)=" + clinic);
         return clinic;
     }
 
