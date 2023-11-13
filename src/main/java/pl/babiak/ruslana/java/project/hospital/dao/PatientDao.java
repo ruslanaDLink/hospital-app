@@ -9,15 +9,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 public class PatientDao {
+    private static final Logger LOGGER = Logger.getLogger(PatientDao.class.getName());
+
     private final String URL = "jdbc:h2:~/ruslana-sql";
     private final String USERNAME = "sql";
     private final String PASSWORD = "";
 
     //create
     public void createTable() {
-        String tableCreationSQL = "CREATE TABLE PATIENT (PATIENT_ID INT NOT NULL UNIQUE, NAME VARCHAR(100) NOT NULL," +
+        String tableCreationSQL = "CREATE TABLE PATIENT (PATIENT_ID IDENTITY, NAME VARCHAR(100) NOT NULL," +
                 "AGE INT NOT NULL, PASSPORT_NUMBER VARCHAR(20) NOT NULL, HAS_INSURANCE BOOLEAN)";
         try {
             Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -31,33 +34,30 @@ public class PatientDao {
         }
     }
 
-    // TODO: 06/11/2023
-    // stworzyc oddzilna klase z metoda ktora bedzie generowala unikalne numery klientow + test jednostkowy
-    //             preparedStatement.setInt(1, patient.getClientNumber());
-    // zastapic powyzszy kod generatorem unikalnych numerow klientow
+     //TODO: 13/11/2023
+    // poprawic ponizsza metode analogicznie do metody create() z klasy ClinicDao
+
     public Patient insertValues(Patient patient) {
+        LOGGER.info("insertValues(" + patient + ")");
         String valuesInsertion = "INSERT INTO PATIENT (PATIENT_ID, NAME, AGE, PASSPORT_NUMBER, HAS_INSURANCE) " +
                 "VALUES (?,?,?,?,?)";
-        UniqueId uniqueId = new UniqueId();
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(valuesInsertion);
-            preparedStatement.setInt(1, uniqueId.getUniqueId());
+        UniqueId id = new UniqueId();
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(valuesInsertion)) {
+
+            int clientId = id.getUniqueId();
+            preparedStatement.setInt(1, clientId);
             preparedStatement.setString(2, patient.getName());
             preparedStatement.setInt(3, patient.getAge());
             preparedStatement.setString(4, patient.getPassportNumber());
             preparedStatement.setBoolean(5, patient.isHasInsurance());
 
             preparedStatement.executeUpdate();
-            // TODO: 06/11/2023
-            // pobrac wygenerowane przez baza danych klucz glowny
-
-            System.out.println("Insertion went successfully.");
-            preparedStatement.close();
-            connection.close();
+            patient.setClientNumber((long)clientId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("insertValues(...)=" + patient);
         return patient;
     }
 
