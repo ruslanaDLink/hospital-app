@@ -2,7 +2,9 @@ package pl.babiak.ruslana.java.project.hospital.dao;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pl.babiak.ruslana.java.project.hospital.model.Address;
 import pl.babiak.ruslana.java.project.hospital.model.Patient;
+import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
 
 public class PatientDaoTest {
     @Test
@@ -17,7 +19,16 @@ public class PatientDaoTest {
     void insertValues() {
         //given
         PatientDao patientDao = new PatientDao();
-        Patient patient = new Patient();
+        Address address = Address.builder()
+                .country("Poland")
+                .voivodeship("Masovian")
+                .postCode("00-002")
+                .city("Warsaw")
+                .street("Pulawska")
+                .flatNumber("2A")
+                .build();
+        UniqueId uniqueId = new UniqueId();
+        Patient patient = new Patient("Agata Kowalska", 28, "FA345", address, true);
 
         //when
         Patient insertedPatient = patientDao.insertValues(patient);
@@ -28,19 +39,43 @@ public class PatientDaoTest {
 
     @Test
     void read() {
+        //given
         PatientDao patientDao = new PatientDao();
-        patientDao.read();
+        UniqueId id = new UniqueId();
+
+        //when
+        Patient readPatient = patientDao.read(id);
+
+        //then
+        Assertions.assertNotNull(readPatient, "Method does not read any information.");
     }
 
     @Test
     void update() {
+        //given
         PatientDao patientDao = new PatientDao();
-        patientDao.update();
+        Address address = Address.builder()
+                .country("Poland")
+                .voivodeship("Masovian")
+                .postCode("00-002")
+                .city("Warsaw")
+                .street("Pulawska")
+                .flatNumber("2A")
+                .build();
+        UniqueId id = new UniqueId();
+        Patient patient = new Patient("Agata Kowalska", 28, "FA345", address, true);
+
+        //when
+        Patient updatedPatient = patientDao.update(patient);
+
+        //then
+        Assertions.assertNotNull(updatedPatient, "No updated changes.");
     }
 
     @Test
     void delete() {
         PatientDao patientDao = new PatientDao();
-        patientDao.delete();
+        UniqueId uniqueId = new UniqueId();
+        patientDao.delete(uniqueId);
     }
 }
