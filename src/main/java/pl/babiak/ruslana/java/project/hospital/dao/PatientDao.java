@@ -31,10 +31,9 @@ public class PatientDao {
         }
     }
 
-    // TODO: 06/11/2023
-    // stworzyc oddzilna klase z metoda ktora bedzie generowala unikalne numery klientow + test jednostkowy
-    //             preparedStatement.setInt(1, patient.getClientNumber());
-    // zastapic powyzszy kod generatorem unikalnych numerow klientow
+    // TODO: 13/11/2023
+    // poprawic ponizsza metode analogicznie do metody create() z klasy ClinicDao
+
     public Patient insertValues(Patient patient) {
         String valuesInsertion = "INSERT INTO PATIENT (PATIENT_ID, NAME, AGE, PASSPORT_NUMBER, HAS_INSURANCE) " +
                 "VALUES (?,?,?,?,?)";
