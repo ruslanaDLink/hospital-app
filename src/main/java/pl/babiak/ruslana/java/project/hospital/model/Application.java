@@ -3,7 +3,10 @@ package pl.babiak.ruslana.java.project.hospital.model;
 import java.time.LocalDateTime;
 
 public class Application {
+    private static final String clinicName = "Przychodnia Lekarska NFZ. Centrum Medyczne Sadyba. Poradnia POZ";
+
     public static void main(String[] args) {
+
         Address clinicAddress = Address.builder()
                 .country("Poland")
                 .city("Warsaw")
@@ -11,9 +14,9 @@ public class Application {
                 .postCode("02-943")
                 .street("Urle 1")
                 .build();
-        Clinic warsawClinicOnUrleStreet = new Clinic(clinicAddress);
+        Clinic warsawClinicOnUrleStreet = new Clinic(clinicAddress, clinicName);
         Doctor johnCardiologist = new Doctor("John Peterson", DoctorType.CARDIOLOGIST);
-
+       UniqueId generatorId = new UniqueId();
         Address dariaAddress = Address.builder()
                 .country("Poland")
                 .voivodeship("Masovian")
