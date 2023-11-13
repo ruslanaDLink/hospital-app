@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Clinic {
+    private String name;
     private Address address;
     private List<Appointment> appointmentList;
 
-    public Clinic(Address address) {
+    public Clinic(Address address, String name) {
         this.address = address;
+        this.name = name;
         appointmentList = new ArrayList<>();
     }
-    
+
     public void reserve(Appointment appointment) {
         if (appointment != null) {
             appointmentList.add(appointment);
@@ -33,6 +35,14 @@ public class Clinic {
 
     public void removeAppointmentFromList(Appointment appointment) {
         appointmentList.remove(appointment);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Address getAddress() {
