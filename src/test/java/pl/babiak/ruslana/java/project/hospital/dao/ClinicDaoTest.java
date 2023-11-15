@@ -6,8 +6,6 @@ import pl.babiak.ruslana.java.project.hospital.model.Address;
 import pl.babiak.ruslana.java.project.hospital.model.Clinic;
 import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ClinicDaoTest {
 
     @Test
@@ -46,7 +44,7 @@ class ClinicDaoTest {
         Clinic clinic = new Clinic(clinicAddress, clinicName);
         UniqueId uniqueId = new UniqueId();
         //when
-        Clinic clinicInfo = clinicDao.read(uniqueId);
+        Clinic clinicInfo = clinicDao.read(uniqueId.getUniqueId());
 
         //then
        Assertions.assertNotNull(clinicDao, "There are nothing to read.");

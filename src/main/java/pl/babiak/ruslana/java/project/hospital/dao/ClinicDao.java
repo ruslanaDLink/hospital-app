@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 public class ClinicDao {
     private static final Logger LOGGER = Logger.getLogger(ClinicDao.class.getName());
+
     private final String URL = "jdbc:h2:~/ruslana-sql";
     private final String USERNAME = "sql";
     private final String PASSWORD = "";
@@ -26,10 +27,11 @@ public class ClinicDao {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
             int id = uniqueId.getUniqueId();
+
             preparedStatement.setInt(1, id);
-            // preparedStatement.setInt(1, 1);
             preparedStatement.setString(2, clinic.getName());
             preparedStatement.setInt(3, -1);
+
             preparedStatement.executeUpdate();
             clinic.setId((long) id);
         } catch (SQLException e) {
@@ -40,26 +42,29 @@ public class ClinicDao {
     }
 
     //read
-    public Clinic read(UniqueId id) {
+    public Clinic read(Integer id) {
+        LOGGER.info("read(" + id + ")");
+
         Clinic clinic = null;
-        String query = "SELECT NAME FROM CLINIC JOIN ADDRESS ON CLINIC.CLINIC_ID=CLINIC.ADDRESS_ID";
-        try {
-
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+        String statement = "SELECT * FROM CLINICS";
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String name = resultSet.getString("NAME");
-                Object address = resultSet.getObject("ADDRESS");
-                System.out.println(name + "\n " + address);
-                clinic = new Clinic((Address) address, name);
-            }
 
-            preparedStatement.close();
-            connection.close();
+            while (resultSet.next()) {
+
+                String name = resultSet.getString("NAME");
+                String address = resultSet.getString("ADDRESS");
+                Address clinicAddress = clinic.getAddress();
+                System.out.println(name + "\n " + address);
+                clinic = new Clinic(clinicAddress, name);
+                clinic.setId(Long.valueOf(id));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("read(...)=" + id);
+
         return clinic;
     }
 

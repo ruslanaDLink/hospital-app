@@ -33,14 +33,6 @@ public class Patient {
         this.id = id;
     }
 
-    public Long getClientNumber() {
-        return id;
-    }
-
-    public void setClientNumber(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
