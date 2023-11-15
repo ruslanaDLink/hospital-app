@@ -1,7 +1,6 @@
 package pl.babiak.ruslana.java.project.hospital.dao;
 
 import pl.babiak.ruslana.java.project.hospital.model.Address;
-import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,6 +12,11 @@ import java.util.logging.Logger;
 
 public class AddressDao {
     private static final Logger LOGGER = Logger.getLogger(AddressDao.class.getName());
+
+    private static final Logger LOGGER = Logger.getLogger(AddressDao.class.getName());
+
+    private static final String ADDRESSES_INSERT_SQL = "INSERT INTO ADDRESS(STREET, FLAT_NUMBER, CITY, VOIVODESHIP, POSTCODE, COUNTRY)" +
+            " VALUES (?,?,?,?,?,?)";
 
     private final String URL = "jdbc:h2:~/ruslana-sql";
     private final String USERNAME = "sql";
@@ -72,6 +76,13 @@ public class AddressDao {
 
             preparedStatement.executeUpdate();
             address.setId((long) id);
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    long generatedId = keys.getLong(1);
+                    //LOGGER.info("Generated Id: " + generatedId);
+                    address.setId(generatedId);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

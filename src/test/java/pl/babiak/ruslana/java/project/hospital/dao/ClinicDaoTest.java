@@ -33,12 +33,20 @@ class ClinicDaoTest {
     void read() {
         //given
         ClinicDao clinicDao = new ClinicDao();
-
+        Address clinicAddress = Address.builder()
+                .country("Poland")
+                .city("Warsaw")
+                .voivodeship("Masovian")
+                .postCode("02-943")
+                .street("Urle 1")
+                .build();
+        String clinicName = "Przychodnia Lekarska NFZ. Centrum Medyczne Sadyba. Poradnia POZ";
+        Clinic clinic = new Clinic(clinicAddress, clinicName);
         UniqueId uniqueId = new UniqueId();
         //when
-        Clinic clinicInfo = clinicDao.read(uniqueId.getUniqueId());
+        Clinic clinicInfo = clinicDao.read(uniqueId);
 
         //then
-        Assertions.assertNotNull(clinicInfo, "read() method test failed..");
+       Assertions.assertNotNull(clinicDao, "There are nothing to read.");
     }
 }
