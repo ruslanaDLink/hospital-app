@@ -13,8 +13,6 @@ public class PatientDaoTest {
         patientDao.createTable();
     }
 
-    // TODO: 06/11/2023
-    // dodac sekscje gwt do wszystkich testow
     @Test
     void insertValues() {
         //given
@@ -27,7 +25,7 @@ public class PatientDaoTest {
                 .street("Pulawska")
                 .flatNumber("2A")
                 .build();
-        UniqueId uniqueId = new UniqueId();
+
         Patient patient = new Patient("Agata Kowalska", 28, "FA345", address, true);
 
         //when
@@ -44,7 +42,7 @@ public class PatientDaoTest {
         UniqueId id = new UniqueId();
 
         //when
-        Patient readPatient = patientDao.read(id);
+        Patient readPatient = patientDao.read((long) id.getUniqueId());
 
         //then
         Assertions.assertNotNull(readPatient, "Method does not read any information.");
@@ -76,6 +74,6 @@ public class PatientDaoTest {
     void delete() {
         PatientDao patientDao = new PatientDao();
         UniqueId uniqueId = new UniqueId();
-        patientDao.delete(uniqueId);
+        patientDao.delete(uniqueId.getUniqueId());
     }
 }

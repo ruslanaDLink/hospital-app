@@ -9,64 +9,68 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 public class PatientDao {
+    private static final Logger LOGGER = Logger.getLogger(PatientDao.class.getName());
+
     private final String URL = "jdbc:h2:~/ruslana-sql";
     private final String USERNAME = "sql";
     private final String PASSWORD = "";
 
     //create
     public void createTable() {
-        String tableCreationSQL = "CREATE TABLE PATIENT (PATIENT_ID INT NOT NULL UNIQUE, NAME VARCHAR(100) NOT NULL," +
+        LOGGER.info("createTable()");
+
+        String tableCreationSQL = "CREATE TABLE PATIENT (PATIENT_ID IDENTITY, NAME VARCHAR(100) NOT NULL," +
                 "AGE INT NOT NULL, PASSPORT_NUMBER VARCHAR(20) NOT NULL, HAS_INSURANCE BOOLEAN)";
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            Statement statement = connection.createStatement();
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             Statement statement = connection.createStatement()) {
+
             statement.execute(tableCreationSQL);
-            System.out.println("Table 'PATIENT' created successfully.");
-            statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("createTable(...)=");
     }
 
-    // TODO: 06/11/2023
-    // stworzyc oddzilna klase z metoda ktora bedzie generowala unikalne numery klientow + test jednostkowy
-    //             preparedStatement.setInt(1, patient.getClientNumber());
-    // zastapic powyzszy kod generatorem unikalnych numerow klientow
+    // TODO: 13/11/2023
+    // napisac ponizsza metode analogicznie do metody ClinicDao create()
+
     public Patient insertValues(Patient patient) {
+        LOGGER.info("insertValues(" + patient + ")");
+
         String valuesInsertion = "INSERT INTO PATIENT (PATIENT_ID, NAME, AGE, PASSPORT_NUMBER, HAS_INSURANCE) " +
                 "VALUES (?,?,?,?,?)";
         UniqueId uniqueId = new UniqueId();
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(valuesInsertion);
-            preparedStatement.setInt(1, uniqueId.getUniqueId());
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(valuesInsertion)) {
+
+            int id = uniqueId.getUniqueId();
+            preparedStatement.setInt(1, id);
             preparedStatement.setString(2, patient.getName());
             preparedStatement.setInt(3, patient.getAge());
             preparedStatement.setString(4, patient.getPassportNumber());
             preparedStatement.setBoolean(5, patient.isHasInsurance());
 
             preparedStatement.executeUpdate();
-            // TODO: 06/11/2023
-            // pobrac wygenerowane przez baza danych klucz glowny
+            patient.setId((long) id);
 
-            System.out.println("Insertion went successfully.");
-            preparedStatement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("insertValues(...)=" + patient);
         return patient;
     }
 
     //read
-    public Patient read(UniqueId generatorId) {
+    public Patient read(Long id) {
+        LOGGER.info("read(" + id + ")");
+
         Patient patient = new Patient();
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PATIENT;");
+
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PATIENT;")) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -77,43 +81,46 @@ public class PatientDao {
 
                 System.out.println("Patient: " + name + "\nAge: " + age + "\nPassport number: " + passportNumber + "\nInsurance presented? " + hasInsurance);
                 patient = new Patient(name, age, passportNumber, patient.getAddress(), hasInsurance);
-                preparedStatement.close();
-                connection.close();
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("read(...)=" + id);
         return patient;
     }
 
     //update
     public Patient update(Patient patient) {
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE PATIENT SET AGE=? WHERE NAME=?");
+        LOGGER.info("update(" + patient + ")");
+
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE PATIENT SET AGE=? WHERE NAME=?")) {
+
             preparedStatement.setInt(1, patient.getAge() + 1);
             preparedStatement.setString(2, patient.getName());
-            if (preparedStatement.executeUpdate() > 0) {
-                System.out.println("Information updated successfully.");
-            }
-            preparedStatement.close();
-            connection.close();
+            preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("update(...)=" + patient);
         return patient;
     }
 
     //delete
-    public void delete(UniqueId id) {
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM PATIENT PASSPORT_NUMBER WHERE PATIENT_ID=?");
-            preparedStatement.setInt(1, id.getUniqueId());
+    public void delete(Integer id) {
+        LOGGER.info("delete(" + id + ")");
+
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM PATIENT PASSPORT_NUMBER WHERE PATIENT_ID=?")) {
+
+            preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
-            System.out.println("Selected information deleted.");
-            preparedStatement.close();
-            connection.close();
+            LOGGER.info("delete(...)=" + id);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

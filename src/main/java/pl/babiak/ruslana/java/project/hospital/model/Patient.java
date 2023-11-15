@@ -2,7 +2,7 @@ package pl.babiak.ruslana.java.project.hospital.model;
 
 
 public class Patient {
-    private int clientNumber;
+    private Long id;
     private String name;
     private int age;
     private String passportNumber;
@@ -25,12 +25,12 @@ public class Patient {
         System.out.println(getName() + " canceled appointment ");
     }
 
-    public int getClientNumber() {
-        return clientNumber;
+    public Long getId() {
+        return id;
     }
 
-    public void setClientNumber(int clientNumber) {
-        this.clientNumber = clientNumber;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
