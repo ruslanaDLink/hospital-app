@@ -9,8 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 public class AddressDao {
+    private static final Logger LOGGER = Logger.getLogger(AddressDao.class.getName());
+
     private final String URL = "jdbc:h2:~/ruslana-sql";
     private final String USERNAME = "sql";
     private final String PASSWORD = "";
@@ -18,16 +21,14 @@ public class AddressDao {
 
     //create
     public void createTable() {
-        String tableCreationSQL = "CREATE TABLE ADDRESS(ADDRESS_ID INT PRIMARY KEY, STREET VARCHAR (100) NOT NULL, " +
+        String tableCreationSQL = "CREATE TABLE ADDRESS(ADDRESS_ID IDENTITY, STREET VARCHAR (100) NOT NULL, " +
                 "FLAT_NUMBER VARCHAR(50) NOT NULL, CITY VARCHAR(50) NOT NULL, VOIVODESHIP VARCHAR(50) NOT NULL, " +
                 "POSTCODE VARCHAR(20), COUNTRY VARCHAR(50) NOT NULL)";
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            Statement statement = connection.createStatement();
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             Statement statement = connection.createStatement()) {
+
             statement.execute(tableCreationSQL);
             System.out.println("Table 'ADDRESS' created successfully.");
-            statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -36,19 +37,17 @@ public class AddressDao {
     public void list() {
         System.out.println("Getting address list");
 
-        try {
-            Connection connection = DriverManager.getConnection(
-                    URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM ADDRESS;");
+        try (Connection connection = DriverManager.getConnection(
+                URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT * FROM ADDRESS;")) {
+
             ResultSet resultSet = preparedStatement.executeQuery();
             System.out.println("Result Set " + resultSet);
             while (resultSet.next()) {
                 String city = resultSet.getString("CITY");
                 System.out.println("CITY: " + city);
             }
-            preparedStatement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -56,11 +55,14 @@ public class AddressDao {
 
     // C - create
     public Address create(Address address) {
+        LOGGER.info("create(" + address + ")");
 
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO ADDRESS VALUES (?,?,?,?,?,?,?)");
-            preparedStatement.setInt(1, 1);
+        String statement = "INSERT INTO ADDRESS VALUES (?,?,?,?,?,?,?)";
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+
+            int id = new UniqueId().getUniqueId();
+            preparedStatement.setInt(1, id);
             preparedStatement.setString(2, address.getCountry());
             preparedStatement.setString(3, address.getCity());
             preparedStatement.setString(4, address.getVoivodeship());
@@ -69,21 +71,22 @@ public class AddressDao {
             preparedStatement.setString(7, address.getFlatNumber());
 
             preparedStatement.executeUpdate();
-            System.out.println("Address created.");
-            preparedStatement.close();
-            connection.close();
+            address.setId((long) id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("create(...)=" + address);
         return address;
     }
 
     // R - read
-    public Address read() {
+    public Address read(Long addressId) {
+        LOGGER.info("read(" + addressId + ")");
+
         Address address = null;
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM ADDRESS");
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM ADDRESS")) {
+
             ResultSet resultSet = preparedStatement.executeQuery();
             System.out.println("Hospital Address");
             if (resultSet.next()) {
@@ -102,43 +105,47 @@ public class AddressDao {
                         .street(street)
                         .flatNumber(flatNumber)
                         .build();
-                String formatString = id + ". Country: %s;\nCity: %s;\nVoivodeship: %s;\nPostcode: %s;\nStreet: %s;\nFlat number: %s";
-                System.out.printf(formatString, country, city, voivodeship, postcode, street, flatNumber);
-                connection.close();
+                String formatString = String.format("Id: %d;\nStreet: %s;\nFlat number: %s;\nCity: %s;\nVoivodeship: %s;\nPostcode: %s;\nCountry: %s",
+                        id, street, flatNumber, city, voivodeship, postcode, country);
+                System.out.println(formatString);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("read(...)=" + addressId);
         return address;
     }
 
     // U - update-SQL UPDATE
     public Address update(Address address) {
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE ADDRESS SET STREET = ? WHERE STREET=?");
-            preparedStatement.setString(1, "Leszczynowa");
+        LOGGER.info("update(" + address + ")");
+
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE ADDRESS SET STREET = ? WHERE STREET=?")) {
+
+            preparedStatement.setString(1, address.getStreet());
             preparedStatement.setString(2, address.getStreet());
-            if (preparedStatement.executeUpdate() > 0) {
-                System.out.println("Street name successfully updated.");
-            }
-            preparedStatement.close();
-            connection.close();
+            preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.info("update(...)=" + address);
         return address;
     }
 
     // D - delete
-    public void delete() {
-        try {
-            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM ADDRESS WHERE STREET=?;");
-            preparedStatement.setString(1, "Pulawska");
+    public void delete(Long id) {
+        LOGGER.info("delete(" + id + ")");
+
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM ADDRESS WHERE ADDRESS_ID=?;")) {
+
+            preparedStatement.setLong(1, 1L);
             preparedStatement.executeUpdate();
-            System.out.println("Deleted successfully.");
-            connection.close();
+            LOGGER.info("delete(...)=" + id);
         } catch (SQLException e) {
             e.printStackTrace();
         }

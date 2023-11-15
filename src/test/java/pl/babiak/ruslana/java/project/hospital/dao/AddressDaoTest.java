@@ -48,8 +48,17 @@ class AddressDaoTest {
         //given
         AddressDao addressDao = new AddressDao();
 
+        Address address = Address.builder()
+                .street("Pulawska")
+                .flatNumber("2A")
+                .city("Warsaw")
+                .voivodeship("Masovian")
+                .postCode("00-002")
+                .country("Poland")
+                .build();
+
         //when
-        Address readAddressInfo = addressDao.read();
+        Address readAddressInfo = addressDao.read(address.getId());
 
         //then
         Assertions.assertNotNull(readAddressInfo, "Address is null.");
@@ -78,8 +87,17 @@ class AddressDaoTest {
     void delete() {
         //given
         AddressDao addressDao = new AddressDao();
+        Address address = Address.builder()
+                .country("Poland")
+                .voivodeship("Masovian")
+                .postCode("00-002")
+                .city("Warsaw")
+                .street("Pulawska")
+                .flatNumber("2A")
+                .build();
+
         //when
-        addressDao.delete();
+        addressDao.delete(address.getId());
         //then
     }
 }
