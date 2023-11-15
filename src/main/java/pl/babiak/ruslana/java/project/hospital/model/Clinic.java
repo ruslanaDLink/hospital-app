@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Clinic {
+    private Long id;
     private String name;
     private Address address;
     private List<Appointment> appointmentList;
@@ -37,6 +38,14 @@ public class Clinic {
         appointmentList.remove(appointment);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -51,5 +60,15 @@ public class Clinic {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Clinic{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address=" + address +
+                ", appointmentList=" + appointmentList +
+                '}';
     }
 }
