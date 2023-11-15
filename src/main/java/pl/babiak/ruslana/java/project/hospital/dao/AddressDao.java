@@ -1,6 +1,7 @@
 package pl.babiak.ruslana.java.project.hospital.dao;
 
 import pl.babiak.ruslana.java.project.hospital.model.Address;
+import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,8 +12,6 @@ import java.sql.Statement;
 import java.util.logging.Logger;
 
 public class AddressDao {
-    private static final Logger LOGGER = Logger.getLogger(AddressDao.class.getName());
-
     private static final Logger LOGGER = Logger.getLogger(AddressDao.class.getName());
 
     private static final String ADDRESSES_INSERT_SQL = "INSERT INTO ADDRESS(STREET, FLAT_NUMBER, CITY, VOIVODESHIP, POSTCODE, COUNTRY)" +

@@ -44,7 +44,7 @@ class ClinicDaoTest {
         Clinic clinic = new Clinic(clinicAddress, clinicName);
         UniqueId uniqueId = new UniqueId();
         //when
-        Clinic clinicInfo = clinicDao.read(uniqueId);
+        Clinic clinicInfo = clinicDao.read(uniqueId.getUniqueId());
 
         //then
        Assertions.assertNotNull(clinicDao, "There are nothing to read.");
