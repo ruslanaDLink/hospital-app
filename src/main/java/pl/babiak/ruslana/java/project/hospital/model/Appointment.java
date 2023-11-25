@@ -3,6 +3,7 @@ package pl.babiak.ruslana.java.project.hospital.model;
 import java.time.LocalDateTime;
 
 public class Appointment {
+    private Long id;
     private LocalDateTime date;
     private Patient patient;
     private Doctor doctor;
@@ -13,6 +14,14 @@ public class Appointment {
         this.patient = patient;
         this.doctor = doctor;
         this.service = service;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getDate() {
