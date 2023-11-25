@@ -8,11 +8,18 @@ public class Clinic {
     private String name;
     private Address address;
     private List<Appointment> appointmentList;
+    private List<Patient> patientList;
+    private List<Doctor> doctorsList;
+    private List<Service> serviceList;
+
 
     public Clinic(Address address, String name) {
         this.address = address;
         this.name = name;
         appointmentList = new ArrayList<>();
+        patientList = new ArrayList<>();
+        doctorsList = new ArrayList<>();
+        serviceList = new ArrayList<>();
     }
 
     public void reserve(Appointment appointment) {
@@ -21,6 +28,7 @@ public class Clinic {
             System.out.println("Patient " + appointment.getPatient().getName() + " reserved appointment to Dr. " + appointment.getDoctor().getName());
         }
     }
+
     public Patient register(Patient patient) {
         System.out.println("New patient registered to clinic.");
         return patient;
@@ -28,7 +36,7 @@ public class Clinic {
 
     public double givePaymentCheck(Appointment appointment) {
         System.out.print("Payment Check: ");
-        if(appointment.getPatient().isHasInsurance()){
+        if (appointment.getPatient().isHasInsurance()) {
             return 0.0;
         }
         return appointment.getService().getPrice();
@@ -60,6 +68,22 @@ public class Clinic {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public List<Appointment> getAppointmentList() {
+        return appointmentList;
+    }
+
+    public List<Patient> getPatientList() {
+        return patientList;
+    }
+
+    public List<Doctor> getDoctorsList() {
+        return doctorsList;
+    }
+
+    public List<Service> getServiceList() {
+        return serviceList;
     }
 
     @Override

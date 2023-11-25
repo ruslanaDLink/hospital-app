@@ -1,5 +1,6 @@
 package pl.babiak.ruslana.java.project.hospital.model;
 
+
 public class Doctor {
     private Long id;
     private String name;
@@ -8,6 +9,9 @@ public class Doctor {
     public Doctor(String name, DoctorType type) {
         this.name = name;
         this.type = type;
+    }
+
+    public Doctor() {
     }
 
     public Long getId() {

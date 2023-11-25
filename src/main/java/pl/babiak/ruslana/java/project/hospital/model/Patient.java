@@ -9,8 +9,6 @@ public class Patient {
     private Address address;
     private boolean hasInsurance;
 
-    public Patient() {
-    }
 
     public Patient(String name, int age, String passportNumber, Address address, boolean hasInsurance) {
         this.name = name;
@@ -18,6 +16,9 @@ public class Patient {
         this.passportNumber = passportNumber;
         this.address = address;
         this.hasInsurance = hasInsurance;
+    }
+
+    public Patient() {
     }
 
     public void cancelAppointment(Clinic clinic, Appointment appointment) {

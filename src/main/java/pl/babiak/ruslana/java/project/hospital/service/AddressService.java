@@ -13,7 +13,7 @@ public class AddressService {
     //praca domowa
     //dla pozostalych wybranych modeli stworzyc warstwe controller oraz service
     //dla poszczegolnych warstw zrobic DID
-    //napisac test jednostkowydla controllerow
+    //napisac test jednostkowy dla controllerow
 
 
     public AddressService(AddressDao addressDao) {
@@ -22,7 +22,15 @@ public class AddressService {
 
     public void create() {
         LOGGER.info("create()");
-        addressDao.create(null);
+        Address defaultAddress = Address.builder()
+                .country("")
+                .voivodeship("")
+                .city("")
+                .postCode("")
+                .street("")
+                .flatNumber("")
+                .build();
+        addressDao.create(defaultAddress);
         LOGGER.info("create(...)=");
     }
 

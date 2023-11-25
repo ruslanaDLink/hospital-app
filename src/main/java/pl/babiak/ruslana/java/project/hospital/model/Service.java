@@ -10,6 +10,9 @@ public class Service {
         this.price = price;
     }
 
+    public Service() {
+    }
+
     public Long getId() {
         return id;
     }
