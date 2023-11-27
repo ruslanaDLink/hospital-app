@@ -1,6 +1,7 @@
 package pl.babiak.ruslana.java.project.hospital.ui.controller;
 
 
+import pl.babiak.ruslana.java.project.hospital.model.Clinic;
 import pl.babiak.ruslana.java.project.hospital.service.ClinicService;
 
 import java.util.logging.Logger;
@@ -14,9 +15,10 @@ public class ClinicController {
         this.clinicService = clinicService;
     }
 
-    public void create(){
+    public Clinic create(Clinic clinic){
         LOGGER.info("create()");
-        clinicService.create();
+        Clinic createdClinic = clinicService.create(clinic);
         LOGGER.info("create(...)=");
+        return createdClinic;
     }
 }

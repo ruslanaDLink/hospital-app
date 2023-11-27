@@ -15,18 +15,12 @@ public class ClinicService {
         this.clinicDao = clinicDao;
     }
 
-    public void create(){
+    public Clinic create(Clinic clinic){
         LOGGER.info("create()");
-        Address defaultAddress = Address.builder()
-                .country("")
-                .voivodeship("")
-                .city("")
-                .postCode("")
-                .street("")
-                .flatNumber("")
-                .build();
-        Clinic clinic = new Clinic(defaultAddress, "Medical Centre");
-        clinicDao.create(clinic);
+        Clinic createdClinic = clinicDao.create(clinic);
         LOGGER.info("create(...)=");
+        return createdClinic;
     }
 }
+// TODO: 27/11/2023
+// poprawic clinicService oraz ClinicController zgodnie z CRUD
