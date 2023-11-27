@@ -37,11 +37,14 @@ public class AddressDao {
         }
     }
 
+    // TODO: 27/11/2023
+    // stworzyc database manager ktora bedzie singletonem
+    // zamienic wszytskie wystapienia DriverManager.getConnection(URL, USERNAME, PASSWORD) wlasnym singletonem
+    // napisac test jednostkowy dla singletona
     public void list() {
         System.out.println("Getting address list");
 
-        try (Connection connection = DriverManager.getConnection(
-                URL, USERNAME, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT * FROM ADDRESS;")) {
 
@@ -56,6 +59,11 @@ public class AddressDao {
         }
     }
 
+    // TODO: 27/11/2023
+    // Stworzyc klase ktora czyta dane dla bazy danych (CREDENTIALS) z plikow properties
+    // zastapic uzycia (URL, USERNAME, PASSWORD) uzyciem nowej klasy dla plikow properties
+    // https://docs.oracle.com/javase/tutorial/essential/environment/properties.html
+    // napisac test jednostkowy dla nowej klasy
     // C - create
     public Address create(Address address) {
         LOGGER.info("create(" + address + ")");
