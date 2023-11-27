@@ -20,10 +20,11 @@ public class AddressService {
         this.addressDao = addressDao;
     }
 
-    public void create() {
-        LOGGER.info("create()");
-        addressDao.create(null);
-        LOGGER.info("create(...)=");
+    public Address create(Address address) {
+        LOGGER.info("create(" + address + ")");
+        Address createdAddress = addressDao.create(address);
+        LOGGER.info("create(...)=" + createdAddress);
+        return createdAddress;
     }
 
     public void read() {

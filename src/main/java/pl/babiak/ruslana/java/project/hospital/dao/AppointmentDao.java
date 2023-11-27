@@ -3,6 +3,7 @@ package pl.babiak.ruslana.java.project.hospital.dao;
 
 import pl.babiak.ruslana.java.project.hospital.model.Appointment;
 import pl.babiak.ruslana.java.project.hospital.model.Doctor;
+import pl.babiak.ruslana.java.project.hospital.model.DoctorType;
 import pl.babiak.ruslana.java.project.hospital.model.Patient;
 import pl.babiak.ruslana.java.project.hospital.model.Service;
 import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
@@ -68,10 +69,10 @@ public class AppointmentDao {
                 Patient patient = new Patient();
                 patient.setId(patientId);
 
-                Doctor doctor = new Doctor();
+                Doctor doctor = new Doctor("", DoctorType.ONCOLOGIST);
                 doctor.setId(doctorId);
 
-                Service service = new Service();
+                Service service = new Service("", 0);
                 service.setId(serviceId);
 
                 appointment = new Appointment(patient,
