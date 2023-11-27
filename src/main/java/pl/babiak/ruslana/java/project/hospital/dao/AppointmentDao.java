@@ -9,7 +9,6 @@ import pl.babiak.ruslana.java.project.hospital.model.Service;
 import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,17 +20,15 @@ import java.util.logging.Logger;
 public class AppointmentDao {
     private static final Logger LOGGER = Logger.getLogger(ClinicDao.class.getName());
 
-    private final String URL = "jdbc:h2:~/ruslana-sql";
-    private final String USERNAME = "sql";
-    private final String PASSWORD = "";
+    private static final Connection connection = DatabaseManager.connectToJdbc();
+
 
     public Appointment create(Appointment appointment) {
         LOGGER.info("create(" + appointment + ")");
         String statement = "INSERT INTO APPOINTMENTS(ID, DATE, TIME, PATIENT_ID, DOCTOR_ID, SERVICE_ID)" +
                 " VALUES(?,?,?,?,?,?)";
         UniqueId uniqueId = new UniqueId();
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
             int id = uniqueId.getUniqueId();
             LocalDateTime localDateTime = LocalDateTime.now();
             Date date = Date.valueOf(localDateTime.toLocalDate());
@@ -57,8 +54,7 @@ public class AppointmentDao {
 
         Appointment appointment = null;
         String statement = "SELECT * FROM APPOINTMENTS";
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -95,15 +91,12 @@ public class AppointmentDao {
         LOGGER.info("update(" + appointment + ")");
         UniqueId uniqueId = new UniqueId();
         appointment.setId((long) uniqueId.getUniqueId());
-
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE APPOINTMENTS SET DATE=? WHERE ID=?")) {
 
             preparedStatement.setObject(1, appointment.getDate());
             preparedStatement.setLong(2, appointment.getId());
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -113,15 +106,12 @@ public class AppointmentDao {
 
     public void delete(Long id) {
         LOGGER.info("delete(" + id + ")");
-
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
                      "DELETE FROM APPOINTMENT DATE WHERE ID=?")) {
 
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             LOGGER.info("delete(...)=" + id);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
