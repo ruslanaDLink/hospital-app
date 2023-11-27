@@ -29,6 +29,7 @@
 
         <!-- Names the annotated entity class -->
         <mapping class="pl.babiak.ruslana.java.project.hospital.dao.hibernate.entity.AddressEntity"/>
+        <mapping class="pl.babiak.ruslana.java.project.hospital.dao.hibernate.entity.ClinicEntity"/>
 
     </session-factory>
 </hibernate-configuration>
