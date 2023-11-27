@@ -3,6 +3,7 @@ package pl.babiak.ruslana.java.project.hospital.service;
 import pl.babiak.ruslana.java.project.hospital.dao.AppointmentDao;
 import pl.babiak.ruslana.java.project.hospital.model.Appointment;
 import pl.babiak.ruslana.java.project.hospital.model.Doctor;
+import pl.babiak.ruslana.java.project.hospital.model.DoctorType;
 import pl.babiak.ruslana.java.project.hospital.model.Patient;
 import pl.babiak.ruslana.java.project.hospital.model.Service;
 
@@ -20,8 +21,8 @@ public class AppointmentService {
 
     public void create() {
         LOGGER.info("create(" + ")");
-        Appointment appointment = new Appointment(new Patient(), new Doctor(),
-                new Service(), LocalDateTime.now());
+        Appointment appointment = new Appointment(new Patient(), new Doctor("", DoctorType.ONCOLOGIST),
+                new Service("", 0), LocalDateTime.now());
         appointmentDao.create(appointment);
         LOGGER.info("create(...)=");
     }
