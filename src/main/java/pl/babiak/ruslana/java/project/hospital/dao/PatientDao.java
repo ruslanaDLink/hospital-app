@@ -4,7 +4,6 @@ import pl.babiak.ruslana.java.project.hospital.model.Patient;
 import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,9 +13,7 @@ import java.util.logging.Logger;
 public class PatientDao {
     private static final Logger LOGGER = Logger.getLogger(PatientDao.class.getName());
 
-    private final String URL = "jdbc:h2:~/ruslana-sql";
-    private final String USERNAME = "sql";
-    private final String PASSWORD = "";
+    private static final Connection connection = DatabaseManager.connectToJdbc();
 
     //create
     public void createTable() {
@@ -24,8 +21,7 @@ public class PatientDao {
 
         String tableCreationSQL = "CREATE TABLE PATIENT (PATIENT_ID IDENTITY, NAME VARCHAR(100) NOT NULL," +
                 "AGE INT NOT NULL, PASSPORT_NUMBER VARCHAR(20) NOT NULL, HAS_INSURANCE BOOLEAN)";
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
 
             statement.execute(tableCreationSQL);
         } catch (SQLException e) {
@@ -43,8 +39,7 @@ public class PatientDao {
         String valuesInsertion = "INSERT INTO PATIENT (PATIENT_ID, NAME, AGE, PASSPORT_NUMBER, HAS_INSURANCE) " +
                 "VALUES (?,?,?,?,?)";
         UniqueId uniqueId = new UniqueId();
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(valuesInsertion)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(valuesInsertion)) {
 
             int id = uniqueId.getUniqueId();
             preparedStatement.setInt(1, id);
@@ -55,7 +50,6 @@ public class PatientDao {
 
             preparedStatement.executeUpdate();
             patient.setId((long) id);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -69,19 +63,15 @@ public class PatientDao {
 
         Patient patient = new Patient();
 
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PATIENT;")) {
-
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PATIENT;")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String name = resultSet.getString("NAME");
                 int age = resultSet.getInt("AGE");
                 String passportNumber = resultSet.getString("PASSPORT_NUMBER");
                 boolean hasInsurance = resultSet.getBoolean("HAS_INSURANCE");
-
                 System.out.println("Patient: " + name + "\nAge: " + age + "\nPassport number: " + passportNumber + "\nInsurance presented? " + hasInsurance);
                 patient = new Patient(name, age, passportNumber, patient.getAddress(), hasInsurance);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,15 +83,11 @@ public class PatientDao {
     //update
     public Patient update(Patient patient) {
         LOGGER.info("update(" + patient + ")");
-
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE PATIENT SET AGE=? WHERE NAME=?")) {
-
             preparedStatement.setInt(1, patient.getAge() + 1);
             preparedStatement.setString(2, patient.getName());
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -112,15 +98,12 @@ public class PatientDao {
     //delete
     public void delete(Integer id) {
         LOGGER.info("delete(" + id + ")");
-
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
                      "DELETE FROM PATIENT PASSPORT_NUMBER WHERE PATIENT_ID=?")) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             LOGGER.info("delete(...)=" + id);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

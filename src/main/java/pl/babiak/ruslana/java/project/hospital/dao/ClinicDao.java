@@ -5,7 +5,6 @@ import pl.babiak.ruslana.java.project.hospital.model.Clinic;
 import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,9 +13,7 @@ import java.util.logging.Logger;
 public class ClinicDao {
     private static final Logger LOGGER = Logger.getLogger(ClinicDao.class.getName());
 
-    private final String URL = "jdbc:h2:~/ruslana-sql";
-    private final String USERNAME = "sql";
-    private final String PASSWORD = "";
+    private static final Connection connection = DatabaseManager.connectToJdbc();
 
     //create
     public Clinic create(Clinic clinic) {
@@ -24,8 +21,7 @@ public class ClinicDao {
         String statement = "INSERT INTO CLINICS(ID, NAME, ADDRESS_ID)" +
                 " VALUES(?,?,?)";
         UniqueId uniqueId = new UniqueId();
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
             int id = uniqueId.getUniqueId();
 
             preparedStatement.setInt(1, id);
@@ -47,12 +43,10 @@ public class ClinicDao {
 
         Clinic clinic = null;
         String statement = "SELECT * FROM CLINICS";
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-
                 String name = resultSet.getString("NAME");
                 String address = resultSet.getString("ADDRESS");
                 Address clinicAddress = clinic.getAddress();

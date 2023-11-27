@@ -4,7 +4,6 @@ import pl.babiak.ruslana.java.project.hospital.model.Address;
 import pl.babiak.ruslana.java.project.hospital.model.UniqueId;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,22 +13,17 @@ import java.util.logging.Logger;
 public class AddressDao {
     private static final Logger LOGGER = Logger.getLogger(AddressDao.class.getName());
 
+    private static final Connection connection = DatabaseManager.connectToJdbc();
+
     private static final String ADDRESSES_INSERT_SQL = "INSERT INTO ADDRESS(STREET, FLAT_NUMBER, CITY, VOIVODESHIP, POSTCODE, COUNTRY)" +
             " VALUES (?,?,?,?,?,?)";
-
-    private final String URL = "jdbc:h2:~/ruslana-sql";
-    private final String USERNAME = "sql";
-    private final String PASSWORD = "";
-
 
     //create
     public void createTable() {
         String tableCreationSQL = "CREATE TABLE ADDRESS(ADDRESS_ID IDENTITY, STREET VARCHAR (100) NOT NULL, " +
                 "FLAT_NUMBER VARCHAR(50) NOT NULL, CITY VARCHAR(50) NOT NULL, VOIVODESHIP VARCHAR(50) NOT NULL, " +
                 "POSTCODE VARCHAR(20), COUNTRY VARCHAR(50) NOT NULL)";
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             Statement statement = connection.createStatement()) {
-
+        try (Statement statement = connection.createStatement()) {
             statement.execute(tableCreationSQL);
             System.out.println("Table 'ADDRESS' created successfully.");
         } catch (SQLException e) {
@@ -43,11 +37,8 @@ public class AddressDao {
     // napisac test jednostkowy dla singletona
     public void list() {
         System.out.println("Getting address list");
-
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT * FROM ADDRESS;")) {
-
             ResultSet resultSet = preparedStatement.executeQuery();
             System.out.println("Result Set " + resultSet);
             while (resultSet.next()) {
@@ -69,10 +60,9 @@ public class AddressDao {
         LOGGER.info("create(" + address + ")");
 
         String statement = "INSERT INTO ADDRESS VALUES (?,?,?,?,?,?,?)";
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
-
+        try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
             int id = new UniqueId().getUniqueId();
+
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, address.getCountry());
             preparedStatement.setString(3, address.getCity());
@@ -102,9 +92,7 @@ public class AddressDao {
         LOGGER.info("read(" + addressId + ")");
 
         Address address = null;
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM ADDRESS")) {
-
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM ADDRESS")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             System.out.println("Hospital Address");
             if (resultSet.next()) {
@@ -138,8 +126,7 @@ public class AddressDao {
     public Address update(Address address) {
         LOGGER.info("update(" + address + ")");
 
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE ADDRESS SET STREET = ? WHERE STREET=?")) {
 
             preparedStatement.setString(1, address.getStreet());
@@ -157,8 +144,7 @@ public class AddressDao {
     public void delete(Long id) {
         LOGGER.info("delete(" + id + ")");
 
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
                      "DELETE FROM ADDRESS WHERE ADDRESS_ID=?;")) {
 
             preparedStatement.setLong(1, 1L);
