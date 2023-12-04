@@ -17,12 +17,12 @@ public class AppointmentEntity {
     @GeneratedValue
     private Long id;
     private LocalDateTime date;
-    @JoinColumn(name="PATIENT_ID")
+    @JoinColumn(name="ID")
     private PatientEntity patient;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="DOCTOR_ID")
+    @JoinColumn(name="ID")
     private DoctorEntity doctor;
-    @JoinColumn(name="SERVICE_ID")
+    @JoinColumn(name="ID")
     private ServiceEntity service;
 
 

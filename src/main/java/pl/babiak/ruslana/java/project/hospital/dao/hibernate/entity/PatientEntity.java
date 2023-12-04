@@ -20,14 +20,14 @@ public class PatientEntity {
     @Column(name = "PASSPORT_NUMBER")
     private String passportNumber;
     @Column(name = "ADDRESS")
-    private Address address;
+    private AddressEntity address;
     @Column(name = "HAS_INSURANCE")
     private boolean hasInsurance;
 
     public PatientEntity() {
     }
 
-    public PatientEntity(String name, int age, String passportNumber, Address address, boolean hasInsurance) {
+    public PatientEntity(String name, int age, String passportNumber, AddressEntity address, boolean hasInsurance) {
         this.name = name;
         this.age = age;
         this.passportNumber = passportNumber;
@@ -67,11 +67,11 @@ public class PatientEntity {
         this.passportNumber = passportNumber;
     }
 
-    public Address getAddress() {
+    public AddressEntity getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(AddressEntity address) {
         this.address = address;
     }
 
