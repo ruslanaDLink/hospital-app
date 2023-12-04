@@ -4,9 +4,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import pl.babiak.ruslana.java.project.hospital.model.DoctorType;
 
 @Entity
+@Table(name="DOCTOR_TEST")
 public class DoctorEntity {
     @Id
     @GeneratedValue
