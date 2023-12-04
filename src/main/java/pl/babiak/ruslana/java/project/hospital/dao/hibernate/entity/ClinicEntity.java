@@ -1,13 +1,12 @@
 package pl.babiak.ruslana.java.project.hospital.dao.hibernate.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import pl.babiak.ruslana.java.project.hospital.model.Address;
-import pl.babiak.ruslana.java.project.hospital.model.Appointment;
-
 import java.util.List;
 
 @Entity
@@ -16,34 +15,37 @@ public class ClinicEntity {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "NAME")
     private String name;
-    private Address address;
-    @JoinColumn(name="APPOINTMENTS")
-    private List<Appointment> appointmentList;
+    @Column(name = "ADDRESS")
+    private AddressEntity address;
+    @Column(name = "APPOINTMENTS")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ClinicEntity")
+    private List<AppointmentEntity> appointmentEntityList;
 
     public ClinicEntity() {
     }
 
-    public ClinicEntity(String name, Address address, List<Appointment> appointmentList) {
+    public ClinicEntity(String name, AddressEntity address, List<AppointmentEntity> appointmentEntityList) {
         this.name = name;
         this.address = address;
-        this.appointmentList = appointmentList;
+        this.appointmentEntityList = appointmentEntityList;
     }
 
-    public Address getAddress() {
+    public AddressEntity getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(AddressEntity address) {
         this.address = address;
     }
 
-    public List<Appointment> getAppointmentList() {
-        return appointmentList;
+    public List<AppointmentEntity> getAppointmentEntityList() {
+        return appointmentEntityList;
     }
 
-    public void setAppointmentList(List<Appointment> appointmentList) {
-        this.appointmentList = appointmentList;
+    public void setAppointmentEntityList(List<AppointmentEntity> appointmentEntityList) {
+        this.appointmentEntityList = appointmentEntityList;
     }
 
     public Long getId() {
@@ -67,7 +69,7 @@ public class ClinicEntity {
         return "ClinicEntity{" +
                 "name='" + name + '\'' +
                 ", address=" + address +
-                ", appointmentList=" + appointmentList +
+                ", appointmentList=" + appointmentEntityList +
                 '}';
     }
 }
