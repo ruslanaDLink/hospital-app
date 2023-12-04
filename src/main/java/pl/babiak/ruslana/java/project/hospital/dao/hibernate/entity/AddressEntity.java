@@ -13,16 +13,61 @@ public class AddressEntity {
     @GeneratedValue
     private Long id;
 
+    @Column(name="STREET")
     private String street;
     @Column(name = "POST_CODE")
     private String postCode;
+    @Column(name="FLAT_NUMBER")
+    private String flatNumber;
+    @Column(name="CITY")
+    private String city;
+    @Column(name="VOIVODESHIP")
+    private String voivodeship;
+    @Column(name="COUNTRY")
+    private String country;
 
     public AddressEntity() {
     }
 
-    public AddressEntity(String street, String postCode) {
+    public AddressEntity(String street, String postCode, String flatNumber, String city, String voivodeship, String country) {
         this.street = street;
         this.postCode = postCode;
+        this.flatNumber = flatNumber;
+        this.city = city;
+        this.voivodeship = voivodeship;
+        this.country = country;
+    }
+
+    public String getFlatNumber() {
+        return flatNumber;
+    }
+
+    public void setFlatNumber(String flatNumber) {
+        this.flatNumber = flatNumber;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getVoivodeship() {
+        return voivodeship;
+    }
+
+    public void setVoivodeship(String voivodeship) {
+        this.voivodeship = voivodeship;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public Long getId() {
@@ -55,6 +100,10 @@ public class AddressEntity {
                 "id=" + id +
                 ", street='" + street + '\'' +
                 ", postCode='" + postCode + '\'' +
+                ", flatNumber='" + flatNumber + '\'' +
+                ", city='" + city + '\'' +
+                ", voivodeship='" + voivodeship + '\'' +
+                ", country='" + country + '\'' +
                 '}';
     }
 }
